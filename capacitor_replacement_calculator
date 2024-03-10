@@ -1,5 +1,6 @@
 import operator
 
+
 def closest_capacitors(target):
     printList = {}
     capacitors = [10, 15, 22, 33, 47, 56, 68, 82, 100]
@@ -18,6 +19,7 @@ def closest_capacitors(target):
         run_check_4caps(capacitors, currentTolerance, target, printList)
     return printList
 
+
 def run_check_2caps(capacitorList, tolerance, target, printList):
     lowTarget = target * (1 - tolerance)
     highTarget = target * (1 + tolerance)
@@ -31,6 +33,7 @@ def run_check_2caps(capacitorList, tolerance, target, printList):
                 combo = f"{cap1}mf + {cap2}mf"
                 if combo not in printList:
                     printList[combo] = abs(cap1 + cap2 - target)
+
 
 def run_check_3caps(capacitorList, tolerance, target, printList):
     lowTarget = target * (1 - tolerance)
@@ -46,6 +49,7 @@ def run_check_3caps(capacitorList, tolerance, target, printList):
                     combo = f"{cap1}mf + {cap2}mf + {cap3}mf"
                     if combo not in printList:
                         printList[combo] = abs(cap1 + cap2 + cap3 - target)
+
 
 def run_check_4caps(capacitorList, tolerance, target, printList):
     lowTarget = target * (1 - tolerance)
@@ -64,6 +68,7 @@ def run_check_4caps(capacitorList, tolerance, target, printList):
                         if combo not in printList:
                             printList[combo] = abs(cap1 + cap2 + cap3 + cap4 - target)
 
+
 def print_combos(dictionary):
     for key, value in dictionary.items():
         value = convert_if_float_with_zero(value)
@@ -79,6 +84,8 @@ def convert_if_float_with_zero(num):
 
 def main():
     targetCapacitance = float(input("Input capacitance to be replaced: "))
+    if targetCapacitance < 10:
+        targetCapacitance = float(input("Please Input capacitance larger than 10mf: "))
     printList = closest_capacitors(targetCapacitance)
     sortedList = dict(sorted(printList.items(), key=operator.itemgetter(1)))
     printFirstOnly = dict(list(sortedList.items())[:12])
