@@ -84,8 +84,12 @@ def convert_if_float_with_zero(num):
 
 def main():
     targetCapacitance = float(input("Input capacitance to be replaced: "))
-    if targetCapacitance < 10:
-        targetCapacitance = float(input("Please Input capacitance larger than 10mf: "))
+    while True:
+        if targetCapacitance < 10:
+            targetCapacitance = float(input("Please Input capacitance larger than 10mf: "))
+        else:
+            break
+
     printList = closest_capacitors(targetCapacitance)
     sortedList = dict(sorted(printList.items(), key=operator.itemgetter(1)))
     printFirstOnly = dict(list(sortedList.items())[:12])
