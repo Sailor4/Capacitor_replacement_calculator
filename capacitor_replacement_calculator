@@ -1,0 +1,89 @@
+import operator
+
+def closest_capacitors(target):
+    printList = {}
+    capacitors = [10, 15, 22, 33, 47, 56, 68, 82, 100]
+    if target in capacitors:
+        currentCap = f"{int(target)}mf"
+        printList[currentCap] = 0
+        return printList
+    maxTolerance = 6
+    for i in range(maxTolerance):
+        if i == 0:
+            currentTolerance = 0
+        else:
+            currentTolerance = i / 100
+        run_check_2caps(capacitors, currentTolerance, target, printList)
+        run_check_3caps(capacitors, currentTolerance, target, printList)
+        run_check_4caps(capacitors, currentTolerance, target, printList)
+    return printList
+
+def run_check_2caps(capacitorList, tolerance, target, printList):
+    lowTarget = target * (1 - tolerance)
+    highTarget = target * (1 + tolerance)
+    for i in range(len(capacitorList)):
+        for j in range(len(capacitorList)):
+            cap1 = capacitorList[i]
+            cap2 = capacitorList[j]
+            if lowTarget <= cap1 + cap2 <= highTarget:
+                if cap2 > cap1:
+                    cap2, cap1 = cap1, cap2
+                combo = f"{cap1}mf + {cap2}mf"
+                if combo not in printList:
+                    printList[combo] = abs(cap1 + cap2 - target)
+
+def run_check_3caps(capacitorList, tolerance, target, printList):
+    lowTarget = target * (1 - tolerance)
+    highTarget = target * (1 + tolerance)
+    for i in range(len(capacitorList)):
+        for j in range(len(capacitorList)):
+            for k in range(len(capacitorList)):
+                cap1 = capacitorList[i]
+                cap2 = capacitorList[j]
+                cap3 = capacitorList[k]
+                if lowTarget <= cap1 + cap2 + cap3 <= highTarget:
+                    cap1, cap2, cap3 = sorted([cap1, cap2, cap3])
+                    combo = f"{cap1}mf + {cap2}mf + {cap3}mf"
+                    if combo not in printList:
+                        printList[combo] = abs(cap1 + cap2 + cap3 - target)
+
+def run_check_4caps(capacitorList, tolerance, target, printList):
+    lowTarget = target * (1 - tolerance)
+    highTarget = target * (1 + tolerance)
+    for i in range(len(capacitorList)):
+        for j in range(len(capacitorList)):
+            for k in range(len(capacitorList)):
+                for l in range(len(capacitorList)):
+                    cap1 = capacitorList[i]
+                    cap2 = capacitorList[j]
+                    cap3 = capacitorList[k]
+                    cap4 = capacitorList[l]
+                    if lowTarget <= cap1 + cap2 + cap3 + cap4 <= highTarget:
+                        cap1, cap2, cap3, cap4 = sorted([cap1, cap2, cap3, cap4])
+                        combo = f"{cap1}mf + {cap2}mf + {cap3}mf + {cap4}mf"
+                        if combo not in printList:
+                            printList[combo] = abs(cap1 + cap2 + cap3 + cap4 - target)
+
+def print_combos(dictionary):
+    for key, value in dictionary.items():
+        value = convert_if_float_with_zero(value)
+        print(f"[ {key} ]   tolerance of: {value}")
+
+
+def convert_if_float_with_zero(num):
+    if isinstance(num, float) and num.is_integer():
+        return int(num)
+    else:
+        return num
+
+
+def main():
+    targetCapacitance = float(input("Input capacitance to be replaced: "))
+    printList = closest_capacitors(targetCapacitance)
+    sortedList = dict(sorted(printList.items(), key=operator.itemgetter(1)))
+    printFirstOnly = dict(list(sortedList.items())[:12])
+    print_combos(printFirstOnly)
+
+
+if __name__ == "__main__":
+    main()
